@@ -6,9 +6,21 @@ defmodule ExercismPractice do
   # Please define the 'preparation_time_in_minutes/1' function
   def preparation_time_in_minutes(layers), do: layers * 2
   # Please define the 'total_time_in_minutes/2' function
-  def total_time_in_minutes(layers, running_time), do: preparation_time_in_minutes(layers) + running_time
+  def total_time_in_minutes(layers, running_time),
+    do: preparation_time_in_minutes(layers) + running_time
+
   # Please define the 'alarm/0' function
   def alarm() do
     Float.floor(50.1)
+  end
+
+  # LanguageList
+  def new(), do: []
+
+  def add(list, language), do: [language | list]
+
+  def remove(list) do
+    [_head | tail] = list
+    tail
   end
 end

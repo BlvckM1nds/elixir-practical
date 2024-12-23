@@ -39,4 +39,6 @@ defmodule AnonFunctions do
 
     Enum.map(list, convert)
   end
+
+  def secret_subtract(secret), do: fn value -> value - secret end
 end
