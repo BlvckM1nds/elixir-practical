@@ -1,11 +1,17 @@
 defmodule AnonFunctions do
+  @spec get_equipment_list() :: [
+          :grappling_hook | :probe | :snacks | :space_helmet | :space_suite,
+          ...
+        ]
   def get_equipment_list(), do: [:space_helmet, :space_suite, :snacks, :grappling_hook, :probe]
 
+  @spec get_first_item(nonempty_maybe_improper_list()) :: any()
   def get_first_item(list) do
     first = fn [head | _rest] -> head end
     first.(list)
   end
 
+  @spec get_item_details(any()) :: :unknown_item | {1 | 2 | 3 | 4 | 16, :kg | :lb, 1 | 16}
   def get_item_details(item) do
     case item do
       :space_helmet -> {3, :kg, 1}
@@ -17,6 +23,7 @@ defmodule AnonFunctions do
     end
   end
 
+  @spec get_weight_lbs(any()) :: list()
   def get_weight_lbs(list) do
     get_lbs = fn item ->
       {weight, type, _qty} = get_item_details(item)
@@ -30,6 +37,7 @@ defmodule AnonFunctions do
     Enum.map(list, get_lbs)
   end
 
+  @spec atom_to_string(any()) :: list()
   def atom_to_string(list) do
     convert = fn x ->
       to_string(x)
