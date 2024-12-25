@@ -23,4 +23,33 @@ defmodule ExercismPractice do
     [_head | tail] = list
     tail
   end
+
+  def sanitize(username) do
+    username
+    |> Enum.reduce([], fn char, acc ->
+      case char do
+        # Convert special German characters
+        ?ä -> acc ++ ~c"ae"
+        ?ö -> acc ++ ~c"oe"
+        ?ü -> acc ++ ~c"ue"
+        ?ß -> acc ++ ~c"ss"
+        # Keep lowercase letters and underscores
+        char when char in ?a..?z or char == ?_ -> acc ++ [char]
+        # Discard all other characters
+        _ -> acc
+      end
+    end)
+  end
+
+  def print(id, name, department) do
+    if id && department do
+      "[#{id}] - #{name} - #{String.upcase(department)}"
+    else
+      if !id do
+        "#{name} - #{String.upcase(department)}"
+      else
+        "#{name} - OWNER"
+      end
+    end
+  end
 end
