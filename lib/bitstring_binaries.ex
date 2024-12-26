@@ -7,9 +7,9 @@ defmodule BitstringBinaries do
 
   def empty_picture(), do: <<>>
 
-  # def test_picture() do
-  #   # Please implement the test_picture/0 function
-  # end
+  def test_picture() do
+    # Please implement the test_picture/0 function
+  end
 
   # def prepend_pixel(picture, color_count, pixel_color_index) do
   #   # Please implement the prepend_pixel/3 function
