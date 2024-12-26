@@ -52,4 +52,64 @@ defmodule ExercismPractice do
       end
     end
   end
+
+  def start(), do: spawn(fn -> loop(0) end)
+
+  defp loop(state) do
+    receive do
+      {:take_a_number, caller} ->
+        new_state = state + 1
+        send(caller, new_state)
+        loop(new_state)
+
+      {:report_state, caller} ->
+        send(caller, state)
+        loop(state)
+
+      :stop ->
+        :ok
+
+      _ ->
+        loop(state)
+    end
+  end
+
+  # WINE CELLAR
+  def explain_colors do
+    [
+      white: "Fermented without skin contact.",
+      red: "Fermented with skin contact using dark-colored grapes.",
+      rose: "Fermented with some skin contact, but not enough to qualify as a red wine."
+    ]
+  end
+
+  def filter(cellar, color, opts \\ [])
+  def filter([], _color, _opts), do: []
+
+  def filter(cellar, color, opts) do
+    year =
+      case opts[:year] do
+        nil ->
+          nil
+
+        year when is_binary(year) ->
+          case Integer.parse(year) do
+            {int, ""} -> int
+            _ -> nil
+          end
+
+        year when is_integer(year) ->
+          year
+      end
+
+    country = opts[:country]
+
+    cellar
+    |> Enum.filter(
+      &(elem(&1, 0) == color and
+          (is_nil(year) or elem(&1, 1) |> elem(1) == year) and
+          (is_nil(country) or elem(&1, 1) |> elem(2) == country))
+    )
+    |> Enum.map(&elem(&1, 1))
+  end
 end
