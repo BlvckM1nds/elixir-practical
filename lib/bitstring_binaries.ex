@@ -74,4 +74,57 @@ defmodule BitstringBinaries do
     defp do_decode(<<nucleotide::4, rest_of_dna::bitstring>>, acc),
       do: do_decode(rest_of_dna, acc ++ [decode_nucleotide(nucleotide)])
   end
+
+  defmodule FileSniffer do
+    @file_map %{
+      "exe" => %{
+        media_type: "application/octet-stream",
+        binary: <<0x7F, 0x45, 0x4C, 0x46>>
+      },
+      "bmp" => %{
+        media_type: "image/bmp",
+        binary: <<0x42, 0x4D>>
+      },
+      "png" => %{
+        media_type: "image/png",
+        binary: <<0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A>>
+      },
+      "jpg" => %{
+        media_type: "image/jpg",
+        binary: <<0xFF, 0xD8, 0xFF>>
+      },
+      "gif" => %{
+        media_type: "image/gif",
+        binary: <<0x47, 0x49, 0x46>>
+      }
+    }
+
+    def type_from_extension(extension) do
+      @file_map[extension]
+    end
+
+    def type_from_binary(file_binary) when is_binary(file_binary) do
+      @file_map
+      |> Enum.find(fn {_ext, %{binary: signature}} ->
+        String.starts_with?(file_binary, signature)
+      end)
+      |> case do
+        {_, %{media_type: media_type}} -> media_type
+        _ -> nil
+      end
+    end
+
+    def type_from_binary(_file_binary), do: nil
+
+    def verify(file_binary, extension) do
+      ext_type = type_from_extension(extension)
+      binary_type = type_from_binary(file_binary)
+
+      if not is_nil(ext_type) and not is_nil(binary_type) and ext_type == binary_type do
+        {:ok, ext_type}
+      else
+        {:error, "Warning, file format and file extension do not match."}
+      end
+    end
+  end
 end
